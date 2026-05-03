@@ -13,7 +13,7 @@ import { useEffect } from "react";
 function App() {
   const { isLoggedIn, loading } = useAuth();
   // Khóa cuộn trang khi có recipe (đang mở popup)
-  const { isOpen, activeRecipeId, closePopup } = usePopup();
+  const { isOpen } = usePopup();
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";

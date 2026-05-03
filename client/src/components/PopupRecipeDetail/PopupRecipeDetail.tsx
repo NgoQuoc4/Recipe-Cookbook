@@ -1,8 +1,6 @@
-import { useEffect, useState } from "react";
-import { Loader2, Plus, SquarePen, X } from "lucide-react";
+import { X } from "lucide-react";
 import { useRecipeDetails } from "../../hook/useRecipeDetails";
 import LoadingView from "../LoadingView/LoadingView";
-import { usePopup } from "../../context/PopupContext";
 
 interface DetailRecipeProps {
   onClose: () => void;
@@ -16,7 +14,7 @@ export default function PopupRecipeDetail({
   //popup
   //   const { isOpen, activeRecipeId, openPopup, closePopup } = usePopup();
 
-  const { recipe, loading, UNIT_LABELS, handleBack, navigate } =
+  const { recipe, loading, UNIT_LABELS } =
     useRecipeDetails(manualId);
 
   if (loading) return <LoadingView />;

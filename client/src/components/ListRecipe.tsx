@@ -17,7 +17,7 @@ export default function ListRecipe({
   showAddButton: boolean;
 }) {
   // sử dụng context popup
-  const { isOpen, activeRecipeId, openPopup, closePopup } = usePopup();
+  const { isOpen, activeRecipeId, closePopup } = usePopup();
   const [isCreateRecipe, setIsCreateRecipe] = useState(false); // trạng thái tạo món ăn
 
   return (
@@ -56,7 +56,7 @@ export default function ListRecipe({
         {/* Render danh sách món ăn */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {recipes.length > 0 ? (
-            recipes.map((recipe) => (
+            recipes.map((recipe: any) => (
               <RecipeCard key={recipe.id} recipe={recipe} isProfile={true} />
             ))
           ) : (
@@ -69,7 +69,7 @@ export default function ListRecipe({
         </div>
         {/* Pop-up chi tiết món ăn */}
         {isOpen && (
-          <PopupRecipeDetail manualId={activeRecipeId} onClose={closePopup} />
+          <PopupRecipeDetail manualId={activeRecipeId || undefined} onClose={closePopup} />
         )}
       </section>
     </>

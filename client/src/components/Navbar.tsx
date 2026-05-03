@@ -1,4 +1,4 @@
-import { Book, ChefHat, Home, LogOut, User } from "lucide-react";
+import { Book, ChefHat, LogOut, User } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
@@ -36,7 +36,7 @@ export default function Navbar() {
               <div className="flex items-center gap-3 bg-brand-primary/5 px-4 py-2 rounded-2xl border border-indigo-100">
                 <User size={18} className="text-brand-primary" />
                 <span className="text-[#1e1b4b] text-sm font-black">
-                  {user.name}
+                  {user?.name}
                 </span>
                 <button
                   onClick={handleLogout}
