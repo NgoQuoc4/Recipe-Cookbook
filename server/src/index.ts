@@ -52,10 +52,9 @@ app.use("/api/recipes", recipeRoutes);
 
 // Error handling middleware
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-  console.error(err.stack);
+  console.error("🔥 [Global Error]:", err);
   res.status(err.status || 500).json({
-    error: {
-      message: err.message || "Internal Server Error",
-    },
+    message: err.message || "Internal Server Error",
+    error: err.toString(),
   });
 });
