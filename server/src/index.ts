@@ -38,7 +38,12 @@ async function main() {
   }
 }
 
-main(); //gọi hàm main để khởi động server
+if (process.env.NODE_ENV !== "production") {
+  main(); //gọi hàm main để khởi động server locally
+}
+
+// Export app for Vercel Serverless Functions
+export default app;
 
 // auth routes
 app.use("/api/auth", authRoutes);
