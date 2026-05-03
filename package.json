@@ -1,6 +1,7 @@
 {
   "name": "recipe-cookbook-root",
   "private": true,
+  "type": "module",
   "scripts": {
     "postinstall": "npm install --prefix server && npx prisma generate --schema=server/prisma/schema.prisma",
     "build": "cd client && npm install && npm run build"
