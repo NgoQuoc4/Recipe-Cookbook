@@ -4,6 +4,10 @@ import path from "path";
 export function loadEnv() {
   try {
     const envPath = path.resolve(process.cwd(), ".env");
+    if (!fs.existsSync(envPath)) {
+      console.log("ℹ️ [Env] Không tìm thấy file .env, sử dụng biến môi trường hệ thống.");
+      return;
+    }
     const envContent = fs.readFileSync(envPath, "utf-8");
     
     envContent.split("\n").forEach((line) => {
