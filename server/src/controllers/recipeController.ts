@@ -19,11 +19,11 @@ export const getHomeFeed = async (req: Request, res: Response) => {
   try {
     const recipes = await handleGetAllRecipe();
     return res.json(recipes);
-  } catch (error) {
+  } catch (error: any) {
     console.error("❌ Lỗi Home Feed:", error);
     return res
       .status(500)
-      .json({ message: "Không thể lấy bảng tin cộng đồng" });
+      .json({ message: "Không thể lấy bảng tin cộng đồng", error: error?.message || String(error) });
   }
 };
 
