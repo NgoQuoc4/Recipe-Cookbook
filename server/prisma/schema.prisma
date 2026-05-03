@@ -1,0 +1,140 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+//Người dùng
+model User {
+  id        String   @id @default(uuid()) //ID người dùng
+  email     String   @unique //Email người dùng
+  name      String? //Tên người dùng
+  password  String //Mật khẩu
+  recipes   Recipe[] //Danh sách công thức
+  createdAt DateTime @default(now()) //Thời gian tạo
+  updatedAt DateTime @updatedAt //Thời gian cập nhật
+  reviews   Review[] //Danh sách đánh giá
+
+  @@map("users")
+}
+
+//Công thức
+model Recipe {
+  id          String     @id @default(uuid()) //ID công thức
+  title       String //Tên công thức
+  description String? //Mô tả công thức
+  steps       String[] //Mảng các bước nấu
+  difficulty  Difficulty @default(EASY) //Dễ, Trung bình, Khó
+  prepTime    Int //Thời gian chuẩn bị (phút)
+  cookTime    Int //Thời gian nấu (phút)
+
+  authorId String //Người tạo công thức
+  author   User   @relation(fields: [authorId], references: [id]) //Người tạo công thức
+
+  categoryId String //Danh mục công thức
+  category   Category @relation(fields: [categoryId], references: [id]) //Danh mục công thức
+
+  isPublic Boolean @default(false) //Có công khai lên trang chủ không
+  image    String? //Ảnh món ăn (tùy chọn)
+
+  ingredients RecipeIngredient[] //Danh sách các nguyên liệu
+
+  createdAt DateTime @default(now()) //Thời gian tạo
+  updatedAt DateTime @updatedAt //Thời gian cập nhật
+  reviews   Review[]
+
+  @@index([title]) //Tạo index để tìm kiếm nhanh hơn
+  @@index([authorId]) //Tạo index để tìm kiếm nhanh hơn
+  @@index([categoryId]) //Tạo index để tìm kiếm nhanh hơn
+  @@map("recipes")
+}
+
+//Nguyên liệu
+model Ingredient {
+  id      String             @id @default(uuid()) //ID nguyên liệu
+  name    String             @unique //Tên nguyên liệu
+  image   String? //Ảnh nguyên liệu
+  recipes RecipeIngredient[] //Danh sách các công thức sử dụng nguyên liệu này
+
+  createdAt DateTime @default(now()) //Thời gian tạo
+  updatedAt DateTime @updatedAt //Thời gian cập nhật
+
+  @@map("ingredients")
+}
+
+//Nguyên liệu trong công thức
+model RecipeIngredient {
+  id           String @id @default(uuid()) //ID nguyên liệu trong công thức
+  recipeId     String //Công thức sử dụng nguyên liệu này
+  ingredientId String //Nguyên liệu này được sử dụng trong công thức này
+  quantity     String //Lượng nguyên liệu
+  unit         Unit //Đơn vị nguyên liệu
+
+  recipe     Recipe     @relation(fields: [recipeId], references: [id], onDelete: Cascade) //Công thức sử dụng nguyên liệu này
+  ingredient Ingredient @relation(fields: [ingredientId], references: [id]) //Nguyên liệu này được sử dụng trong công thức này
+
+  createdAt DateTime @default(now()) //Thời gian tạo
+  updatedAt DateTime @updatedAt //Thời gian cập nhật
+
+  @@unique([recipeId, ingredientId]) //Đảm bảo mỗi nguyên liệu chỉ xuất hiện một lần trong mỗi công thức
+  @@index([recipeId]) //Tạo index để tìm kiếm nhanh hơn
+  @@map("recipe_ingredients")
+}
+
+//Danh mục
+model Category {
+  id      String   @id @default(uuid()) //ID danh mục
+  name    String //Tên danh mục
+  image   String? //Ảnh danh mục
+  recipes Recipe[] //Danh sách các công thức thuộc danh mục này
+
+  createdAt DateTime @default(now()) //Thời gian tạo
+  updatedAt DateTime @updatedAt //Thời gian cập nhật
+
+  @@map("categories")
+}
+
+//Đánh giá
+model Review {
+  id       String  @id @default(uuid()) //ID đánh giá
+  rating   Int //Đánh giá (1-5)
+  comment  String? //Bình luận
+  recipeId String //Công thức được đánh giá
+  userId   String //Người đánh giá
+
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade) //Công thức được đánh giá
+  user   User   @relation(fields: [userId], references: [id]) //Người đánh giá
+
+  createdAt DateTime @default(now()) //Thời gian tạo
+  updatedAt DateTime @updatedAt //Thời gian cập nhật
+
+  @@map("reviews")
+}
+
+//Độ khó
+enum Difficulty {
+  EASY //Dễ
+  MEDIUM //Trung bình
+  HARD //Khó
+}
+
+enum Unit {
+  G //gram
+  KG //kilogram
+  ML //mililit
+  L //lít
+  TSP //teaspoon
+  TBSP //tablespoon
+  PCS //piece
+  OUNCE //ounce
+  POUND //pound
+  OTHER //khác
+}
